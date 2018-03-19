@@ -1,7 +1,7 @@
 package co.simplon.gwi.JDBCEval;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 
 public class Customer {
 
@@ -40,8 +40,32 @@ public class Customer {
 
 	public void setId(int id) {
 		this.id = new Integer(id);
-	}
+	}	
 	
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setKnickname(String knickname) {
+		this.knickname = knickname;
+	}
+
+	public void setBirthdate(LocalDate birthdate) {
+		this.birthdate = birthdate;
+	}
+
+	public void setCredits(double credits) {
+		this.credits = credits;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -69,6 +93,14 @@ public class Customer {
 	public double getCredits() {
 		return credits;
 	}
+
+	@Override
+	public String toString() {
+		return "Customer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", knickname=" + knickname + ", birthdate=" + birthdate + ", credits=" + credits + "]";
+	}
+	
+	
 	
 	
 		

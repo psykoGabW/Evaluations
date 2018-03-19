@@ -6,8 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 class CustomerDAO extends DAO<Customer> {
+
+	private final static String TABLE_NAME = "TB_customer";
 
 	private final static String COLUMN_NAME_ID = "pk_id";
 	private final static String COLUMN_NAME_FIRST_NAME = "firstname";
@@ -25,6 +28,10 @@ class CustomerDAO extends DAO<Customer> {
 	@Override
 	public Customer create(Customer o) {
 
+		if (o == null) {
+			return null;
+		}
+
 		String insertQuery = "INSERT INTO TB_customer (";
 		insertQuery += COLUMN_NAME_FIRST_NAME + ",";
 		insertQuery += COLUMN_NAME_LAST_NAME + ",";
@@ -40,7 +47,7 @@ class CustomerDAO extends DAO<Customer> {
 			pS.setString(2, o.getLastName());
 			pS.setString(3, o.getEmail());
 			pS.setString(4, o.getKnickname());
-			pS.setDate(5,  java.sql.Date.valueOf(o.getBirthdate()));
+			pS.setDate(5, java.sql.Date.valueOf(o.getBirthdate()));
 			pS.setDouble(6, o.getCredits());
 
 			pS.executeUpdate();
@@ -58,6 +65,41 @@ class CustomerDAO extends DAO<Customer> {
 		}
 
 		return o;
+	}
+
+	@Override
+	public Customer[] readAll() {
+		// TODO Auto-generated method stub
+
+		String selectQuery = String.format("SELECT * FROM %s ;", TABLE_NAME);
+		Customer[] result = null;
+
+		try (Statement s = dbCon.createStatement()) {
+			ResultSet rS = s.executeQuery(selectQuery);
+
+			ArrayList<Customer> resultTmp = new ArrayList<Customer>();
+
+			while (rS.next()) {
+				resultTmp.add(	resultTmp.size(),
+								new Customer(rS.getInt(COLUMN_NAME_ID),
+											rS.getString(COLUMN_NAME_FIRST_NAME),
+											rS.getString(COLUMN_NAME_LAST_NAME),
+											rS.getString(COLUMN_NAME_EMAIL),
+											rS.getString(COLUMN_NAME_KNICKNAME),
+											rS.getDate(COLUMN_NAME_BIRTHDATE).toLocalDate(),
+											rS.getDouble(COLUMN_NAME_CREDITS))
+								);
+			}
+			rS.close();
+
+			result = (Customer[]) resultTmp.toArray();
+			
+		} catch (SQLException e) {
+			System.out.println("An SQL error occured during retrieving all data from of customer table : " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 
 	@Override
@@ -79,6 +121,8 @@ class CustomerDAO extends DAO<Customer> {
 					rS.getDate(COLUMN_NAME_BIRTHDATE).toLocalDate(),
 					rS.getDouble(COLUMN_NAME_CREDITS));
 
+			rS.close();
+
 		} catch (SQLException e) {
 			System.out.println("An SQL error occured during reading of customer " + id + " : " + e.getMessage());
 			e.printStackTrace();
@@ -90,6 +134,10 @@ class CustomerDAO extends DAO<Customer> {
 	@Override
 	public Customer update(Customer o) {
 		// TODO Auto-generated method stub
+
+		if (o == null || o.getId() == null) {
+			return null;
+		}
 
 		String updateQuery = String.format("UPDATE TB_customer SET ");
 		updateQuery += COLUMN_NAME_FIRST_NAME + "= ? ,";
@@ -110,6 +158,8 @@ class CustomerDAO extends DAO<Customer> {
 			pS.setDouble(6, o.getCredits());
 			pS.setInt(7, o.getId());
 			pS.executeUpdate();
+
+			pS.close();
 
 		} catch (SQLException e) {
 			System.out.println("Update of tb_customer " + o.getId() + " failed : " + e.getMessage());
@@ -135,7 +185,7 @@ class CustomerDAO extends DAO<Customer> {
 		} catch (SQLException s) {
 			System.out.println("Delete of customer " + o.getId() + " falied : " + s.getMessage());
 			s.printStackTrace();
-		}		
+		}
 	}
 
 }

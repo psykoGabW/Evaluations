@@ -12,10 +12,12 @@ abstract class DAO<T> {
 
 	public abstract T read(int id);
 
+	public abstract T[] readAll();
+	
 	public abstract T update(T o);
 
-	public abstract void delete(T o);
-
+	public abstract void delete(T o);	
+	
 	public DAO(Connection dbCon) throws InvalidParameterException, SQLException {
 		if (dbCon == null) {
 			throw new InvalidParameterException("A valid database connection is required !");

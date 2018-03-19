@@ -24,9 +24,9 @@ CREATE TABLE APPStore.TB_videogame(
   name  VARCHAR(50) NOT NULL,
   credits_price  DECIMAL(5,2) NOT NULL,
   PEGI INTEGER,
-  short_description VARCHAR(256) NOT NULL,
+  short_description VARCHAR(256), -- NOT NULL,
   full_description TEXT,
-  fk_publisher_id INTEGER REFERENCES APPStore.TB_Publisher(pk_id),
+  -- fk_publisher_id INTEGER REFERENCES APPStore.TB_Publisher(pk_id),
   website_url   VARCHAR(512)
 );
 
