@@ -1,0 +1,9 @@
+# URL of database host (with database name)
+connectionURL=
+# User that will be used for database Connection
+connectionUser=
+# Password that will be used for database Connection
+connectionPwd=
+
+# Value of schema has to be in lowercase.
+connectionSchema=appstore
