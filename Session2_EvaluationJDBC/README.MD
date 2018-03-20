@@ -3,7 +3,7 @@
 > First... Sorry for my english... Writing in progress
 
 ## Deployment
-Currently, this program is launched through Eclipse.
+Currently, this program is launched through Eclipse (JRE 1.8).<br/>
 Below, some requirements to fulfill before launching it.
 
 ### Database Creation
@@ -32,16 +32,24 @@ For each category, you can :
   * create item
   * delete item
 
-Adding records on *credits sales* and on *purchased video games* will impact *customers* by changing his available credits.
+Adding records on *credits sales* and on *purchased video games* will impact *customers* by changing his available credits.<br/>
+Currently, deletion of those records will not impact back *customers*.
 
 ## Troubleshooting
 A lot... I guess.<br/>
-I don't had a lot of time to test...
 
 ## Technical documentation
 ### Database
 I try to use some PF pattern to name tables (prefix with TB_).
 It's important to notice that postgresql is not case sensitive... except for schema matching. :-( <br/>
-I choose to store date and datetime <br/>
+I choose to store date and time with DATE and TIMESTAMP type to practice those.<br/>
 
 ### Java
+I try to use during this project for my first time:
+  * Singleton
+  * DAO pattern
+Let me know if I haven't used or implemented them correctly.
+
+Other specifities used :
+  * SQL transactions : To keep integrity on some complex functionnalities
+  * PreparedStatement : Mainly to use easily date time format.

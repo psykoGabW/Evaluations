@@ -2,15 +2,8 @@ package co.simplon.gwi.JDBCEval;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Scanner;
-
-/**
- * Hello world!
- *
- */
 
 public class App {
 
@@ -19,8 +12,11 @@ public class App {
 
 	final static Scanner scanner = new Scanner(System.in);
 
-	private static AppStoreDAO appStore = null;
-
+	/**
+	 * This private enum is designed to specify on which element we're working on.
+	 * @author Utilisateur
+	 *
+	 */
 	private static enum MenuType {
 
 		Customers("Customer"), VideoGames("Video game"), PurchasedVideoGames("Purchased video game"), CreditSales(
@@ -35,15 +31,6 @@ public class App {
 		public String toString() {
 			return MenuLabel;
 		}
-	}
-
-	private static AppStoreDAO getAppStore() {
-
-		if (appStore == null) {
-			appStore = new AppStoreDAO();
-		}
-
-		return appStore;
 	}
 
 	private static void deleteMenu(Scanner scanner, MenuType typeOfElt) {
@@ -76,6 +63,7 @@ public class App {
 				PurchasedVideoGame pV = new PurchasedVideoGame();
 				pV.setId(iKey);
 				AppStoreDAO.getPurchasedVideoGameDAO().delete(pV);
+				// TODO : Update Customer.credits when a purchase is deleted.
 			}
 			break;
 		case CreditSales:
@@ -83,6 +71,7 @@ public class App {
 				CreditSale cS = new CreditSale();
 				cS.setId(iKey);
 				AppStoreDAO.getCreditSaleDAO().delete(cS);
+				// TODO : Update Customer.credits when purchase of credits is deleted.
 			}
 			break;
 		default:
@@ -283,6 +272,18 @@ public class App {
 		return vgResult;
 	}
 
+	/**
+	 * This method is designed to get PurchasedVideoGame attributes for creation /
+	 * updating.
+	 * 
+	 * @param scanner
+	 *            Active scanner to use for input reading.
+	 * @param pvgInit
+	 *            If not null, this PurchasedVideoGame will be used to set default
+	 *            values for the user.
+	 * @return Instance of PurchasedVideoGame with user input
+	 */
+
 	private static PurchasedVideoGame getPurchasedVideoGameData(Scanner scanner, PurchasedVideoGame pvgInit) {
 		PurchasedVideoGame pvg = new PurchasedVideoGame();
 
@@ -329,9 +330,12 @@ public class App {
 	}
 
 	/**
+	 * Menu CRUD -> Action add
 	 * 
 	 * @param scanner
+	 *            active scanner to use for menu display
 	 * @param menu
+	 *            Type of element to display
 	 */
 	private static void addMenu(Scanner scanner, MenuType menu) {
 		switch (menu) {
@@ -401,7 +405,7 @@ public class App {
 				}
 
 				if (sequenceOk) {
-					System.out.println("Transaction added with ID : "+ pvg.getId());
+					System.out.println("Transaction added with ID : " + pvg.getId());
 					AppStoreDAO.commitInstructionsSeq();
 				} else {
 					AppStoreDAO.rollbackInstructionsSeq();
@@ -416,7 +420,7 @@ public class App {
 	}
 
 	/**
-	 * Display Crud Submenu regarding MenuType given in parameter
+	 * Display CRUD Sub-menu regarding MenuType given in parameter
 	 * 
 	 * @param scanner
 	 *            Scanner to use for display
@@ -500,15 +504,8 @@ public class App {
 
 		mainMenu(scanner);
 
-		/*
-		 * testCustomerDAO(getAppStore());
-		 * 
-		 * 
-		 * testCreditSaleDAO(getAppStore());
-		 */
-
-		if (getAppStore() != null) {
-			getAppStore().close();
+		if (AppStoreDAO.getConnection() != null) {
+			AppStoreDAO.close();
 		}
 		scanner.close();
 		System.out.println("Connections closed");

@@ -96,12 +96,10 @@ public class Utils {
 				if (doubleInput == null && !userInput.isEmpty() && !isEmptyAccepted) {
 					System.out.println(
 							"Please enter a Double value !");
-					System.out.print(">");
-					
+					System.out.print(">");					
 				}
 			}
 		} while (doubleInput == null || (isEmptyAccepted && userInput.isEmpty()));
-
 		return doubleInput;
 	}
 	

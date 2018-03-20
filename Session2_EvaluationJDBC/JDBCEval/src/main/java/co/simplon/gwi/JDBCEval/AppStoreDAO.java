@@ -158,11 +158,7 @@ public class AppStoreDAO {
 		}
 	}
 
-	public AppStoreDAO() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public void close() {
+	public static void close() {
 		try {
 			if (connect != null) {
 				connect.close();
