@@ -103,7 +103,8 @@ public class CreditSaleDAO extends DAO<CreditSale> {
 			}
 			rS.close();
 			
-			result = (CreditSale[]) resultTmp.toArray();
+			result = new CreditSale[resultTmp.size()];
+			resultTmp.toArray(result);
 			
 		} catch (SQLException e) {
 			System.err.println("An SQL error occured during retrieving all data from Credit Sale TABLE : " + e.getMessage());

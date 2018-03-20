@@ -124,5 +124,16 @@ public class VideoGame {
 	public VideoGame() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public void copyFrom(VideoGame vg) {
+		this.id = vg.id;
+		this.name = vg.name;
+		this.price = vg.price;
+		this.pegiClassification = vg.pegiClassification;
+		this.shortDescription = vg.shortDescription;
+		this.fullDescription = vg.fullDescription;
+		this.webSiteURL = vg.webSiteURL;
+	}
+
 
 }

@@ -11,19 +11,9 @@ import java.util.ArrayList;
 
 public class PurchasedVideoGameDAO extends DAO<PurchasedVideoGame> {
 
-	/*
-	CREATE TABLE APPStore.TB_purchased_videogame(
-			  fk_customer_id  INTEGER NOT NULL REFERENCES APPStore.TB_customer(pk_id),
-			  fk_videogame_id INTEGER NOT NULL REFERENCES APPStore.TB_videogame(pk_id),
-			  purchase_time   TIMESTAMP WITH TIME ZONE NOT NULL,
-			  credits_price    DECIMAL(5,2) NOT NULL CHECK (credits_price >=0), -- credits_price is store because price of TB_VIDEOGAME may change in time.
-			  CONSTRAINT CONSTRAINT_PURCHASED_GAME_PK PRIMARY KEY(FK_Customer_id, FK_Videogame_id)
-			);
-	*/
-	
 	private final static String TABLE_NAME = "TB_purchased_videogame";
 	
-	private final static String COLUMN_NAME_ID = "pk_id";
+	private final static String COLUMN_NAME_ID = "id";
 	private final static String COLUMN_NAME_VIDEOGAME_ID = "fk_videogame_id";
 	private final static String COLUMN_NAME_CUSTOMER_ID = "fk_customer_id";
 	private final static String COLUMN_NAME_PURCHASE_DATE_TIME = "purchase_time";
@@ -45,7 +35,7 @@ public class PurchasedVideoGameDAO extends DAO<PurchasedVideoGame> {
 				COLUMN_NAME_PURCHASE_DATE_TIME,
 				COLUMN_NAME_PRICE);
 
-		try (PreparedStatement pS = dbCon.prepareStatement(insertQuery)) {
+		try (PreparedStatement pS = dbCon.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
 			pS.setInt(1, o.getVideoGameID());
 			pS.setInt(2, o.getCustomerID());
 			pS.setTimestamp(3, java.sql.Timestamp.valueOf(o.getPurchaseTime()));
@@ -53,9 +43,12 @@ public class PurchasedVideoGameDAO extends DAO<PurchasedVideoGame> {
 
 			pS.executeUpdate();
 
+			ResultSet rS = pS.getGeneratedKeys();
+			rS.next();
+			o.setId(rS.getInt(COLUMN_NAME_ID));
+			
 		} catch (SQLException e) {
 			System.err.println("Purchase Videogame has not been saved in database : " + e.getMessage());
-			e.printStackTrace();
 			return null;
 		}
 
@@ -76,6 +69,7 @@ public class PurchasedVideoGameDAO extends DAO<PurchasedVideoGame> {
 			rS.next();
 
 			result = new PurchasedVideoGame(
+					rS.getInt(COLUMN_NAME_ID),
 					rS.getInt(COLUMN_NAME_CUSTOMER_ID),
 					rS.getInt(COLUMN_NAME_VIDEOGAME_ID),
 					rS.getTimestamp(COLUMN_NAME_PURCHASE_DATE_TIME).toLocalDateTime(),
@@ -85,7 +79,6 @@ public class PurchasedVideoGameDAO extends DAO<PurchasedVideoGame> {
 
 		} catch (SQLException e) {
 			System.err.println("An SQL error occured during reading of Purchase Videogame " + id + " : " + e.getMessage());
-			e.printStackTrace();
 		}
 
 		return result;
@@ -104,6 +97,7 @@ public class PurchasedVideoGameDAO extends DAO<PurchasedVideoGame> {
 			while (rS.next()) {
 				resultTmp.add(	resultTmp.size(),
 								new PurchasedVideoGame(
+										rS.getInt(COLUMN_NAME_ID),
 										rS.getInt(COLUMN_NAME_CUSTOMER_ID),
 										rS.getInt(COLUMN_NAME_VIDEOGAME_ID),
 										rS.getTimestamp(COLUMN_NAME_PURCHASE_DATE_TIME).toLocalDateTime(),
@@ -113,11 +107,11 @@ public class PurchasedVideoGameDAO extends DAO<PurchasedVideoGame> {
 			}
 			rS.close();
 			
-			result = (PurchasedVideoGame[]) resultTmp.toArray();
+			result = new PurchasedVideoGame[resultTmp.size()];
+			resultTmp.toArray(result);
 			
 		} catch (SQLException e) {
 			System.err.println("An SQL error occured during retrieving all data from Purchased VideoGame TABLE : " + e.getMessage());
-			e.printStackTrace();
 		}
 		
 		return result;		
@@ -151,7 +145,6 @@ public class PurchasedVideoGameDAO extends DAO<PurchasedVideoGame> {
 
 		} catch (SQLException e) {
 			System.err.println("Purchased videogame has not been updated in database : " + e.getMessage());
-			e.printStackTrace();
 			return null;
 		}
 
@@ -175,7 +168,6 @@ public class PurchasedVideoGameDAO extends DAO<PurchasedVideoGame> {
 			deleteStatement.execute(deleteQuery);
 		} catch (SQLException s) {
 			System.out.println("Delete of Purchased VideoGame [" + o.getCustomerID() + ", " + o.getVideoGameID() +"] failed : " + s.getMessage());
-			s.printStackTrace();
 		}
 	}
 

@@ -38,6 +38,10 @@ public class Customer {
 		
 	}
 
+	public Customer() {
+		
+	}
+	
 	public void setId(int id) {
 		this.id = new Integer(id);
 	}	
@@ -101,7 +105,22 @@ public class Customer {
 	}
 	
 	
+	public void copyFrom(Customer c) 
+	{
+		this.id = c.id;
+		this.firstName = c.firstName;
+		this.lastName = c.lastName;
+		this.email = c.email;
+		this.knickname = c.knickname;
+		this.birthdate = c.birthdate;
+		this.credits = c.credits;		
+	}	
 	
-	
+	public void addCredits(Double credits) {
+		this.credits += credits;
+	}
 		
+	public void substractCredits(Double credits) {
+		this.credits -= credits;
+	}
 }

@@ -134,7 +134,8 @@ public class VideoGameDAO extends DAO<VideoGame> {
 			}
 			rS.close();
 
-			result = (VideoGame[]) resultTmp.toArray();
+			result = new VideoGame[resultTmp.size()];
+			resultTmp.toArray(result);
 
 		} catch (SQLException e) {
 			System.err.println(

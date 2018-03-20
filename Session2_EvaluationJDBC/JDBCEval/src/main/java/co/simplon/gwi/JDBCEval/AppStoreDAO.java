@@ -58,7 +58,7 @@ public class AppStoreDAO {
 		return connect;
 	}
 
-	public static CustomerDAO getCustomerDAO(){
+	public static CustomerDAO getCustomerDAO() {
 		if (customerFactory == null) {
 			try {
 				customerFactory = new CustomerDAO(getConnection());
@@ -71,53 +71,102 @@ public class AppStoreDAO {
 		return customerFactory;
 	}
 
-	public static CreditSaleDAO getCreditSaleDAO(){
+	public static CreditSaleDAO getCreditSaleDAO() {
 		if (creditSaleFactory == null) {
 			try {
 				creditSaleFactory = new CreditSaleDAO(getConnection());
 			} catch (InvalidParameterException | SQLException e) {
 				// TODO Auto-generated catch block
 				System.err.println("Credit Sale DAO can't be initiate");
-				e.printStackTrace();				
+				e.printStackTrace();
 			}
 		}
 		return creditSaleFactory;
 	}
-	
-	public static VideoGameDAO getVideoGameDAO(){
+
+	public static VideoGameDAO getVideoGameDAO() {
 		if (videogameFactory == null) {
 			try {
 				videogameFactory = new VideoGameDAO(getConnection());
 			} catch (InvalidParameterException | SQLException e) {
 				// TODO Auto-generated catch block
 				System.err.println("Videogame DAO can't be initiate");
-				e.printStackTrace();				
+				e.printStackTrace();
 			}
 		}
 		return videogameFactory;
 	}
-	
-	public static PurchasedVideoGameDAO getPurchasedVideoGameDAO(){
+
+	public static PurchasedVideoGameDAO getPurchasedVideoGameDAO() {
 		if (purchasedVideoGameFactory == null) {
 			try {
 				purchasedVideoGameFactory = new PurchasedVideoGameDAO(getConnection());
 			} catch (InvalidParameterException | SQLException e) {
 				// TODO Auto-generated catch block
 				System.err.println("Purchased Videogame DAO can't be initiate");
-				e.printStackTrace();				
+				e.printStackTrace();
 			}
 		}
 		return purchasedVideoGameFactory;
 	}
-	
-	
+
+	/**
+	 * Lazy method to rollbackInstructions
+	 * 
+	 * @return boolean to indicate if roll back is correctly done or not
+	 */
+	public static boolean rollbackInstructionsSeq() {
+		try {
+			getConnection().rollback();
+			getConnection().setAutoCommit(true);
+			return true;
+		} catch (SQLException e) {
+			System.out.println("Critical ERROR - rollbackInstructions - Rollback failed ! ");
+			return false;
+		}
+	}
+
+	/**
+	 * Lazy method to commit SQL instruction done until this call
+	 * 
+	 * @return boolean to indicate if commit is correctly done or not
+	 */
+	public static boolean commitInstructionsSeq() {
+		try {
+			getConnection().commit();
+			getConnection().setAutoCommit(true);
+			return true;
+		} catch (SQLException e) {
+			rollbackInstructionsSeq();
+			return false;
+		}
+
+	}
+
+	/**
+	 * Lazy method to set AutoCommit to false before launching any complex
+	 * operations sequences.
+	 * 
+	 * @return boolean to indicate if setting auto commit has been correctly done.
+	 */
+	public static boolean beginInstructionsSeq() {
+		try {
+			getConnection().setAutoCommit(false);
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+
 	public AppStoreDAO() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public void close() {
 		try {
-			connect.close();
+			if (connect != null) {
+				connect.close();
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

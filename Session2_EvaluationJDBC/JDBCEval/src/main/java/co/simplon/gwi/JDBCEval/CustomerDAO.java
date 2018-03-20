@@ -60,7 +60,6 @@ class CustomerDAO extends DAO<Customer> {
 
 		} catch (SQLException e) {
 			System.err.println("Customer has not been saved in database : " + e.getMessage());
-			e.printStackTrace();
 			return null;
 		}
 
@@ -92,11 +91,11 @@ class CustomerDAO extends DAO<Customer> {
 			}
 			rS.close();
 
-			result = (Customer[]) resultTmp.toArray();
+			result = new Customer[resultTmp.size()];
+			resultTmp.toArray(result);
 			
 		} catch (SQLException e) {
 			System.out.println("An SQL error occured during retrieving all data from of customer table : " + e.getMessage());
-			e.printStackTrace();
 		}
 
 		return result;
@@ -125,7 +124,6 @@ class CustomerDAO extends DAO<Customer> {
 
 		} catch (SQLException e) {
 			System.out.println("An SQL error occured during reading of customer " + id + " : " + e.getMessage());
-			e.printStackTrace();
 		}
 
 		return customer;
@@ -163,7 +161,6 @@ class CustomerDAO extends DAO<Customer> {
 
 		} catch (SQLException e) {
 			System.out.println("Update of tb_customer " + o.getId() + " failed : " + e.getMessage());
-			e.printStackTrace();
 			return null;
 		}
 
@@ -184,7 +181,6 @@ class CustomerDAO extends DAO<Customer> {
 			deleteStatement.execute(deleteQuery);
 		} catch (SQLException s) {
 			System.out.println("Delete of customer " + o.getId() + " falied : " + s.getMessage());
-			s.printStackTrace();
 		}
 	}
 
