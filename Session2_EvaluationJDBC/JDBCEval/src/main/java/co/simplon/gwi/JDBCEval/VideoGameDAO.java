@@ -1,6 +1,5 @@
 package co.simplon.gwi.JDBCEval;
 
-import java.lang.reflect.GenericArrayType;
 import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
