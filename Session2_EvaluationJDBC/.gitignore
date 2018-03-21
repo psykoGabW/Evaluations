@@ -11,4 +11,7 @@ buildNumber.properties
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
 
+<<<<<<< HEAD
 *.properties
+=======
+>>>>>>> 427ada37b311aa3f884099397b05cfb0212ee1f4
